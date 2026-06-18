@@ -13,7 +13,7 @@ function ComplaintMap({ complaints = [] }) {
   const firstLocation = complaintsWithLocation[0]?.location;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#1E293B] shadow-sm">
       <MapContainer
         center={
           firstLocation ? [firstLocation.lat, firstLocation.lng] : defaultCenter

@@ -1,9 +1,9 @@
 import { normalizeComplaintStatus } from "../../utils/complaintConstants.js";
 
 const statusStyles = {
-  pending: "bg-yellow-100 text-yellow-800 ring-yellow-200",
-  "in-progress": "bg-blue-100 text-blue-800 ring-blue-200",
-  resolved: "bg-green-100 text-green-800 ring-green-200",
+  pending: "bg-amber-400/10 text-amber-300 ring-amber-300/20",
+  "in-progress": "bg-[#38BDF8]/10 text-[#38BDF8] ring-[#38BDF8]/20",
+  resolved: "bg-emerald-400/10 text-emerald-300 ring-emerald-300/20",
 };
 
 const statusLabels = {
@@ -19,7 +19,7 @@ function StatusBadge({ status = "pending" }) {
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${
         statusStyles[normalizedStatus] ||
-        "bg-slate-100 text-slate-700 ring-slate-200"
+        "bg-slate-400/10 text-slate-300 ring-slate-300/20"
       }`}
     >
       {statusLabels[normalizedStatus] || status}

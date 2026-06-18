@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { ImagePlus, Send, TextCursorInput } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import LocationPicker from "../../components/citizen/LocationPicker.jsx";
@@ -103,6 +104,7 @@ function CreateComplaint() {
     payload.append("location", JSON.stringify(formData.location));
     payload.append("lat", String(formData.location.lat));
     payload.append("lng", String(formData.location.lng));
+    payload.append("address", formData.location.address || "");
 
     setIsLoading(true);
 
@@ -124,25 +126,29 @@ function CreateComplaint() {
   };
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-950">
+    <div className="mx-auto max-w-5xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="rounded-2xl border border-white/[0.08] bg-[#1E293B] p-6 shadow-sm">
+        <span className="inline-flex items-center gap-2 rounded-full border border-[#F97316]/25 bg-[#F97316]/10 px-3 py-1 text-xs font-semibold text-[#FDBA74]">
+          <TextCursorInput className="h-4 w-4" aria-hidden="true" />
+          New complaint
+        </span>
+        <h1 className="mt-4 text-2xl font-bold tracking-tight text-[#F8FAFC]">
           Report Complaint
         </h1>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-[#94A3B8]">
           Submit a road maintenance issue with a clear image and description.
         </p>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        className="rounded-2xl border border-white/[0.08] bg-[#1E293B] p-5 shadow-sm sm:p-6"
       >
-        <div className="grid gap-5">
+        <div className="grid gap-5 lg:grid-cols-2">
           <div>
             <label
               htmlFor="title"
-              className="block text-sm font-semibold text-slate-700"
+              className="block text-sm font-semibold text-[#E2E8F0]"
             >
               Title
             </label>
@@ -152,33 +158,15 @@ function CreateComplaint() {
               type="text"
               value={formData.title}
               onChange={handleChange}
-              className="mt-2 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+              className="mt-2 block w-full rounded-2xl border border-white/[0.08] bg-[#0F172A] px-4 py-3 text-[#F8FAFC] outline-none transition placeholder:text-[#64748B] focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20"
               placeholder="Large pothole near main road"
             />
           </div>
 
           <div>
             <label
-              htmlFor="description"
-              className="block text-sm font-semibold text-slate-700"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              rows="5"
-              value={formData.description}
-              onChange={handleChange}
-              className="mt-2 block w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
-              placeholder="Describe the issue, nearby landmark, and urgency."
-            />
-          </div>
-
-          <div>
-            <label
               htmlFor="category"
-              className="block text-sm font-semibold text-slate-700"
+              className="block text-sm font-semibold text-[#E2E8F0]"
             >
               Category
             </label>
@@ -187,7 +175,7 @@ function CreateComplaint() {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="mt-2 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-slate-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+              className="mt-2 block w-full rounded-2xl border border-white/[0.08] bg-[#0F172A] px-4 py-3 text-[#F8FAFC] outline-none transition focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20"
             >
               <option value="">Select category</option>
               {COMPLAINT_CATEGORIES.map((category) => (
@@ -198,10 +186,28 @@ function CreateComplaint() {
             </select>
           </div>
 
-          <div>
+          <div className="lg:col-span-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-semibold text-[#E2E8F0]"
+            >
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              rows="5"
+              value={formData.description}
+              onChange={handleChange}
+              className="mt-2 block w-full resize-y rounded-2xl border border-white/[0.08] bg-[#0F172A] px-4 py-3 text-[#F8FAFC] outline-none transition placeholder:text-[#64748B] focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20"
+              placeholder="Describe the issue, nearby landmark, and urgency."
+            />
+          </div>
+
+          <div className="lg:col-span-2">
             <label
               htmlFor="image"
-              className="block text-sm font-semibold text-slate-700"
+              className="block text-sm font-semibold text-[#E2E8F0]"
             >
               Image Upload
             </label>
@@ -211,14 +217,20 @@ function CreateComplaint() {
               type="file"
               accept="image/png,image/jpeg,image/jpg,image/webp"
               onChange={handleImageChange}
-              className="mt-2 block w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 file:mr-4 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-emerald-700 hover:file:bg-emerald-100"
+              className="mt-2 block w-full rounded-2xl border border-white/[0.08] bg-[#0F172A] px-4 py-3 text-sm text-[#94A3B8] file:mr-4 file:rounded-xl file:border-0 file:bg-[#F97316] file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-orange-500"
             />
             {previewUrl && (
               <img
                 src={previewUrl}
                 alt="Complaint preview"
-                className="mt-4 h-56 w-full rounded-lg border border-slate-200 object-cover"
+                className="mt-4 h-64 w-full rounded-2xl border border-white/[0.08] object-cover"
               />
+            )}
+            {!previewUrl && (
+              <div className="mt-4 flex h-36 items-center justify-center rounded-2xl border border-dashed border-white/[0.12] bg-[#0F172A] text-sm text-[#94A3B8]">
+                <ImagePlus className="mr-2 h-5 w-5 text-[#F97316]" />
+                Image preview will appear here
+              </div>
             )}
           </div>
 
@@ -228,14 +240,22 @@ function CreateComplaint() {
               setFormData((current) => ({ ...current, location }))
             }
           />
+
+          {formData.location?.address && (
+            <div className="rounded-2xl border border-[#F97316]/20 bg-[#F97316]/10 px-4 py-3 text-sm text-[#FDBA74] lg:col-span-2">
+              <span className="font-semibold">Detected address: </span>
+              {formData.location.address}
+            </div>
+          )}
         </div>
 
         <div className="mt-6 flex justify-end">
           <button
             type="submit"
             disabled={isLoading}
-            className="rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-400"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#F97316] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-orange-500 disabled:cursor-not-allowed disabled:bg-orange-300 disabled:hover:translate-y-0"
           >
+            <Send className="h-4 w-4" aria-hidden="true" />
             {isLoading ? "Submitting..." : "Submit Complaint"}
           </button>
         </div>

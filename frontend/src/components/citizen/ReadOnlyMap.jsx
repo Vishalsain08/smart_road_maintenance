@@ -9,7 +9,7 @@ function ReadOnlyMap({ complaint, heightClass = "h-80" }) {
     !Number.isFinite(complaint?.location?.lng)
   ) {
     return (
-      <div className="rounded-lg border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-600">
+      <div className="rounded-2xl border border-dashed border-white/[0.12] bg-[#1E293B] p-6 text-sm text-[#94A3B8]">
         Location is not available for this complaint.
       </div>
     );
@@ -18,7 +18,7 @@ function ReadOnlyMap({ complaint, heightClass = "h-80" }) {
   const position = [complaint.location.lat, complaint.location.lng];
 
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#1E293B] shadow-sm">
       <MapContainer
         center={position}
         zoom={15}
@@ -37,6 +37,11 @@ function ReadOnlyMap({ complaint, heightClass = "h-80" }) {
               <p className="text-sm text-slate-600">
                 {formatComplaintCategory(complaint.category)}
               </p>
+              {complaint.location?.address && (
+                <p className="text-sm text-slate-600">
+                  {complaint.location.address}
+                </p>
+              )}
               <StatusBadge status={complaint.status} />
             </div>
           </Popup>

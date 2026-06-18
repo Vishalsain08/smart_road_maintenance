@@ -2,6 +2,7 @@ import StatusBadge from "../citizen/StatusBadge.jsx";
 import {
   COMPLAINT_STATUSES,
   formatComplaintCategory,
+  formatComplaintLocation,
   normalizeComplaintStatus,
 } from "../../utils/complaintConstants.js";
 
@@ -31,6 +32,7 @@ function ComplaintTable({
                 "Complaint",
                 "Category",
                 "Status",
+                "Location",
                 "Citizen",
                 "Engineer",
                 "Created",
@@ -69,6 +71,11 @@ function ComplaintTable({
                 </td>
                 <td className="px-4 py-4">
                   <StatusBadge status={complaint.status} />
+                </td>
+                <td className="max-w-64 px-4 py-4 text-sm text-slate-600">
+                  <span className="line-clamp-2">
+                    {formatComplaintLocation(complaint.location)}
+                  </span>
                 </td>
                 <td className="px-4 py-4 text-sm text-slate-600">
                   {complaint.reportedBy?.name || "Unknown"}
@@ -138,6 +145,7 @@ function ComplaintTable({
               <p>Citizen: {complaint.reportedBy?.name || "Unknown"}</p>
               <p>Engineer: {complaint.assignedEngineer?.name || "Unassigned"}</p>
               <p>Created: {formatDate(complaint.createdAt)}</p>
+              <p>Location: {formatComplaintLocation(complaint.location)}</p>
             </div>
             <div className="mt-4 flex flex-wrap gap-3">
               <button className="text-sm font-semibold text-emerald-700" onClick={() => onView(complaint)}>

@@ -1,23 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
+import { CheckCircle2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
-import EmptyState from "../../components/citizen/EmptyState.jsx";
-import LoadingSpinner from "../../components/citizen/LoadingSpinner.jsx";
+import AssignedComplaintCard from "../../components/engineer/AssignedComplaintCard.jsx";
 import api from "../../services/api.js";
 import { normalizeComplaintStatus } from "../../utils/complaintConstants.js";
 
-const formatDate = (date) =>
-  date
-    ? new Intl.DateTimeFormat("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }).format(new Date(date))
-    : "Not available";
+function SkeletonBlock({ className = "" }) {
+  return <div className={`animate-pulse rounded-2xl bg-white/10 ${className}`} />;
+}
 
 function ResolvedComplaints() {
   const [complaints, setComplaints] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -37,99 +30,55 @@ function ResolvedComplaints() {
     fetchComplaints();
   }, []);
 
-  const resolvedComplaints = useMemo(() => {
-    const searchValue = searchTerm.trim().toLowerCase();
-
-    return complaints.filter((complaint) => {
-      const isResolved = normalizeComplaintStatus(complaint.status) === "resolved";
-      const matchesSearch =
-        !searchValue ||
-        complaint.title?.toLowerCase().includes(searchValue) ||
-        complaint.category?.toLowerCase().includes(searchValue);
-
-      return isResolved && matchesSearch;
-    });
-  }, [complaints, searchTerm]);
-
-  if (isLoading) {
-    return <LoadingSpinner label="Loading resolved complaints..." />;
-  }
+  const resolvedComplaints = useMemo(
+    () =>
+      complaints.filter(
+        (complaint) => normalizeComplaintStatus(complaint.status) === "resolved",
+      ),
+    [complaints],
+  );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+    <main className="min-h-screen bg-[#0F172A] text-[#F8FAFC]">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-950">
+          <p className="text-sm font-semibold text-[#F97316]">Completed work</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
             Resolved Complaints
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Completed repairs with submitted proof.
+          <p className="mt-2 text-sm text-[#94A3B8]">
+            All resolved complaints with submitted repair proof.
           </p>
         </div>
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
-          className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 sm:w-72"
-          placeholder="Search resolved complaints"
-        />
-      </div>
 
-      {resolvedComplaints.length > 0 ? (
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {resolvedComplaints.map((complaint) => (
-            <article
-              key={complaint._id}
-              className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="grid grid-cols-2">
-                {complaint.image ? (
-                  <img
-                    src={complaint.image}
-                    alt={complaint.title}
-                    className="h-36 w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-36 items-center justify-center bg-slate-100 text-xs text-slate-500">
-                    Original
-                  </div>
-                )}
-                {complaint.resolutionImage ? (
-                  <img
-                    src={complaint.resolutionImage}
-                    alt="Resolution"
-                    className="h-36 w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-36 items-center justify-center bg-green-50 text-xs text-green-700">
-                    Resolution
-                  </div>
-                )}
-              </div>
-              <div className="p-5">
-                <h2 className="font-semibold text-slate-950">
-                  {complaint.title}
-                </h2>
-                <p className="mt-2 text-sm text-slate-500">
-                  Resolved {formatDate(complaint.resolvedAt || complaint.updatedAt)}
-                </p>
-                <Link
-                  to={`/engineer/complaints/${complaint._id}`}
-                  className="mt-4 inline-flex w-full justify-center rounded-md border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                >
-                  View Details
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          title="No resolved complaints found"
-          message="Resolved complaints will appear here after you submit repair proof."
-        />
-      )}
-    </div>
+        {isLoading ? (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonBlock key={index} className="h-[360px]" />
+            ))}
+          </div>
+        ) : resolvedComplaints.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {resolvedComplaints.map((complaint) => (
+              <AssignedComplaintCard
+                key={complaint._id}
+                complaint={complaint}
+                compact
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-white/[0.12] bg-[#1E293B] p-8 text-center shadow-lg shadow-slate-950/10">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-400/10 text-emerald-300">
+              <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <p className="mt-4 text-sm font-semibold text-[#F8FAFC]">
+              No resolved complaints yet
+            </p>
+          </div>
+        )}
+      </div>
+    </main>
   );
 }
 

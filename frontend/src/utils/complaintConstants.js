@@ -25,3 +25,15 @@ export const formatComplaintCategory = (category) => {
     ? category.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
     : "General";
 };
+
+export const formatComplaintLocation = (location) => {
+  if (location?.address) {
+    return location.address;
+  }
+
+  if (Number.isFinite(location?.lat) && Number.isFinite(location?.lng)) {
+    return `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`;
+  }
+
+  return "Location not available";
+};

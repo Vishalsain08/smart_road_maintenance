@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
   MapContainer,
@@ -68,6 +68,51 @@ const getCurrentPosition = (options) =>
 
 function LocationPicker({ value, onChange }) {
   const [isLocating, setIsLocating] = useState(false);
+  const [isResolvingAddress, setIsResolvingAddress] = useState(false);
+  const reverseGeocodeRequestId = useRef(0);
+
+  const selectLocation = async (coords) => {
+    const nextLocation = {
+      lat: Number(coords.lat),
+      lng: Number(coords.lng),
+      address: "",
+    };
+    const requestId = reverseGeocodeRequestId.current + 1;
+
+    reverseGeocodeRequestId.current = requestId;
+    onChange(nextLocation);
+    setIsResolvingAddress(true);
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${nextLocation.lat}&lon=${nextLocation.lng}`,
+      );
+
+      if (!response.ok) {
+        throw new Error("Unable to detect address");
+      }
+
+      const data = await response.json();
+
+      if (reverseGeocodeRequestId.current !== requestId) {
+        return;
+      }
+
+      onChange({
+        ...nextLocation,
+        address: data.display_name || "",
+      });
+    } catch (error) {
+      if (reverseGeocodeRequestId.current === requestId) {
+        toast.error("Location selected, but address detection failed.");
+        onChange(nextLocation);
+      }
+    } finally {
+      if (reverseGeocodeRequestId.current === requestId) {
+        setIsResolvingAddress(false);
+      }
+    }
+  };
 
   const handleUseCurrentLocation = async () => {
     if (!window.isSecureContext) {
@@ -105,7 +150,7 @@ function LocationPicker({ value, onChange }) {
         });
       }
 
-      onChange({
+      await selectLocation({
         lat: Number(position.coords.latitude),
         lng: Number(position.coords.longitude),
       });
@@ -137,27 +182,27 @@ function LocationPicker({ value, onChange }) {
   const mapCenter = value ? [value.lat, value.lng] : defaultCenter;
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-white/[0.08] bg-[#0F172A] p-4 shadow-sm lg:col-span-2">
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-sm font-semibold text-slate-950">
+          <h2 className="text-sm font-semibold text-[#F8FAFC]">
             Complaint Location
           </h2>
-          <p className="mt-1 text-sm text-slate-500">
+          <p className="mt-1 text-sm text-[#94A3B8]">
             Click the map or use your current location.
           </p>
         </div>
         <button
           type="button"
           disabled={isLocating}
-          className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 disabled:cursor-not-allowed disabled:opacity-70"
+          className="rounded-xl border border-[#F97316]/25 bg-[#F97316]/10 px-4 py-2.5 text-sm font-semibold text-[#FDBA74] transition-colors duration-200 hover:bg-[#F97316]/15 disabled:cursor-not-allowed disabled:opacity-70"
           onClick={handleUseCurrentLocation}
         >
           {isLocating ? "Locating..." : "Use Current Location"}
         </button>
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-lg border border-slate-200">
+      <div className="mt-4 overflow-hidden rounded-2xl border border-white/[0.08]">
         <MapContainer
           center={mapCenter}
           zoom={value ? selectedZoom : defaultZoom}
@@ -168,18 +213,30 @@ function LocationPicker({ value, onChange }) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <MapClickHandler onSelectLocation={onChange} />
+          <MapClickHandler onSelectLocation={selectLocation} />
           <MapViewUpdater position={value} />
           {value && <Marker position={[value.lat, value.lng]} />}
         </MapContainer>
       </div>
 
-      <div className="mt-3 rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-600">
+      <div className="mt-3 rounded-2xl border border-white/[0.08] bg-[#1E293B] px-4 py-3 text-sm text-[#94A3B8]">
         {value ? (
-          <span>
-            Latitude: {value.lat.toFixed(6)} | Longitude:{" "}
-            {value.lng.toFixed(6)}
-          </span>
+          <div className="space-y-2">
+            <p>
+              Latitude: {value.lat.toFixed(6)} | Longitude:{" "}
+              {value.lng.toFixed(6)}
+            </p>
+            <div>
+              <p className="font-semibold text-[#E2E8F0]">
+                Detected Location:
+              </p>
+              <p className="mt-1">
+                {isResolvingAddress
+                  ? "Detecting address..."
+                  : value.address || "Address not available"}
+              </p>
+            </div>
+          </div>
         ) : (
           <span>No location selected yet.</span>
         )}

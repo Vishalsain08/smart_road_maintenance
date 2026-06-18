@@ -2,14 +2,20 @@ import Complaint from "../models/Complaint.js";
 import uploadToCloudinary from "../utils/uploadToCloudinary.js";
 
 // Converts multipart form location data into the shape required by the schema.
-const parseLocation = (location, lat, lng) => {
+const normalizeLocation = (location) => ({
+  lat: Number(location.lat),
+  lng: Number(location.lng),
+  address: location.address || "",
+});
+
+const parseLocation = (location, lat, lng, address = "") => {
   if (location && typeof location === "object") {
-    return location;
+    return normalizeLocation(location);
   }
 
   if (location && typeof location === "string") {
     try {
-      return JSON.parse(location);
+      return normalizeLocation(JSON.parse(location));
     } catch (error) {
       const invalidLocationError = new Error("Location must be valid JSON with lat and lng");
       invalidLocationError.statusCode = 400;
@@ -21,6 +27,7 @@ const parseLocation = (location, lat, lng) => {
     return {
       lat: Number(lat),
       lng: Number(lng),
+      address,
     };
   }
 
@@ -30,8 +37,8 @@ const parseLocation = (location, lat, lng) => {
 // Creates a new complaint for the logged-in citizen.
 export const createComplaint = async (req, res, next) => {
   try {
-    const { title, description, category, location, lat, lng } = req.body;
-    const parsedLocation = parseLocation(location, lat, lng);
+    const { title, description, category, location, lat, lng, address } = req.body;
+    const parsedLocation = parseLocation(location, lat, lng, address);
 
     // Validate required fields.
     if (!title || !description || !category || !parsedLocation) {

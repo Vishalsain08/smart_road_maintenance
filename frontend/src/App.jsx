@@ -1,10 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import AdminLayout from "./layouts/AdminLayout.jsx";
-import CitizenLayout from "./layouts/CitizenLayout.jsx";
-import EngineerLayout from "./layouts/EngineerLayout.jsx";
 import PublicLayout from "./layouts/PublicLayout.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
-import Analytics from "./pages/admin/Analytics.jsx";
 import Engineers from "./pages/admin/Engineers.jsx";
 import ManageComplaints from "./pages/admin/ManageComplaints.jsx";
 import MapOverview from "./pages/admin/MapOverview.jsx";
@@ -28,33 +24,29 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-      </Route>
 
-      <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="complaints" element={<ManageComplaints />} />
-          <Route path="engineers" element={<Engineers />} />
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="map" element={<MapOverview />} />
+        <Route element={<ProtectedRoute allowedRoles={["citizen"]} />}>
+          <Route path="/citizen" element={<CitizenDashboard />} />
+          <Route path="/citizen/create" element={<CreateComplaint />} />
+          <Route path="/citizen/complaints" element={<MyComplaints />} />
+          <Route path="/citizen/complaints/:id" element={<ComplaintDetails />} />
         </Route>
-      </Route>
 
-      <Route element={<ProtectedRoute allowedRoles={["citizen"]} />}>
-        <Route path="/citizen" element={<CitizenLayout />}>
-          <Route index element={<CitizenDashboard />} />
-          <Route path="create" element={<CreateComplaint />} />
-          <Route path="complaints" element={<MyComplaints />} />
-          <Route path="complaints/:id" element={<ComplaintDetails />} />
+        <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/complaints" element={<ManageComplaints />} />
+          <Route path="/admin/engineers" element={<Engineers />} />
+          <Route path="/admin/map" element={<MapOverview />} />
         </Route>
-      </Route>
 
-      <Route element={<ProtectedRoute allowedRoles={["engineer"]} />}>
-        <Route path="/engineer" element={<EngineerLayout />}>
-          <Route index element={<EngineerDashboard />} />
-          <Route path="complaints" element={<AssignedComplaints />} />
-          <Route path="complaints/:id" element={<EngineerComplaintDetails />} />
-          <Route path="resolved" element={<ResolvedComplaints />} />
+        <Route element={<ProtectedRoute allowedRoles={["engineer"]} />}>
+          <Route path="/engineer" element={<EngineerDashboard />} />
+          <Route path="/engineer/complaints" element={<AssignedComplaints />} />
+          <Route
+            path="/engineer/complaints/:id"
+            element={<EngineerComplaintDetails />}
+          />
+          <Route path="/engineer/resolved" element={<ResolvedComplaints />} />
         </Route>
       </Route>
     </Routes>

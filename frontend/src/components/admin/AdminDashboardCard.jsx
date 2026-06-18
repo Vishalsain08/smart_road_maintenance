@@ -1,24 +1,24 @@
 function AdminDashboardCard({ label, value, helper, tone = "emerald" }) {
   const tones = {
-    emerald: "bg-emerald-50 text-emerald-700",
-    yellow: "bg-yellow-50 text-yellow-700",
-    blue: "bg-blue-50 text-blue-700",
-    green: "bg-green-50 text-green-700",
-    slate: "bg-slate-100 text-slate-700",
+    emerald: "border-[#F97316]/25 bg-[#F97316]/10 text-[#FDBA74]",
+    yellow: "border-amber-400/25 bg-amber-400/10 text-amber-200",
+    blue: "border-sky-400/25 bg-sky-400/10 text-sky-200",
+    green: "border-emerald-400/25 bg-emerald-400/10 text-emerald-200",
+    slate: "border-white/[0.08] bg-[#0F172A] text-[#CBD5E1]",
   };
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-white/[0.08] bg-[#1E293B] p-5 shadow-sm">
       <div
-        className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md text-sm font-bold ${
+        className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-xl border text-sm font-bold ${
           tones[tone] || tones.emerald
         }`}
       >
         {String(label).slice(0, 1)}
       </div>
-      <p className="text-sm font-medium text-slate-500">{label}</p>
-      <p className="mt-2 text-3xl font-bold text-slate-950">{value}</p>
-      {helper && <p className="mt-2 text-xs text-slate-500">{helper}</p>}
+      <p className="text-sm font-medium text-[#94A3B8]">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-[#F8FAFC]">{value}</p>
+      {helper && <p className="mt-2 text-xs text-[#94A3B8]">{helper}</p>}
     </div>
   );
 }

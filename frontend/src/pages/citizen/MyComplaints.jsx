@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { List, Map, Search } from "lucide-react";
 import toast from "react-hot-toast";
 import ComplaintCard from "../../components/citizen/ComplaintCard.jsx";
 import ComplaintMap from "../../components/citizen/ComplaintMap.jsx";
@@ -16,12 +17,12 @@ const statusFilters = [
 
 function SkeletonCard() {
   return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <div className="aspect-[16/10] animate-pulse bg-slate-200" />
-      <div className="space-y-3 p-4">
-        <div className="h-4 w-3/4 animate-pulse rounded bg-slate-200" />
-        <div className="h-3 w-1/2 animate-pulse rounded bg-slate-200" />
-        <div className="h-3 w-full animate-pulse rounded bg-slate-100" />
+    <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-[#1E293B] shadow-sm">
+      <div className="h-44 animate-pulse bg-white/10" />
+      <div className="space-y-3 p-5">
+        <div className="h-4 w-3/4 animate-pulse rounded bg-white/10" />
+        <div className="h-3 w-1/2 animate-pulse rounded bg-white/10" />
+        <div className="h-3 w-full animate-pulse rounded bg-white/10" />
       </div>
     </div>
   );
@@ -69,53 +70,59 @@ function MyComplaints() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
+      <div className="rounded-2xl border border-white/[0.08] bg-[#1E293B] p-6 shadow-sm">
+        <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-950">
+          <h1 className="text-2xl font-bold tracking-tight text-[#F8FAFC]">
             My Complaints
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-[#94A3B8]">
             Review every issue you have reported and follow its current status.
           </p>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <div className="inline-flex rounded-md border border-slate-300 bg-white p-1">
+          <div className="inline-flex rounded-2xl border border-white/[0.08] bg-[#0F172A] p-1">
             <button
               type="button"
-              className={`rounded px-3 py-1.5 text-sm font-semibold transition ${
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
                 viewMode === "list"
-                  ? "bg-emerald-600 text-white"
-                  : "text-slate-600 hover:bg-slate-100"
+                  ? "bg-[#F97316] text-white"
+                  : "text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#F8FAFC]"
               }`}
               onClick={() => setViewMode("list")}
             >
+              <List className="h-4 w-4" aria-hidden="true" />
               List View
             </button>
             <button
               type="button"
-              className={`rounded px-3 py-1.5 text-sm font-semibold transition ${
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
                 viewMode === "map"
-                  ? "bg-emerald-600 text-white"
-                  : "text-slate-600 hover:bg-slate-100"
+                  ? "bg-[#F97316] text-white"
+                  : "text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#F8FAFC]"
               }`}
               onClick={() => setViewMode("map")}
             >
+              <Map className="h-4 w-4" aria-hidden="true" />
               Map View
             </button>
           </div>
-          <input
-            type="search"
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 sm:w-64"
-            placeholder="Search complaints"
-          />
+          <div className="flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#0F172A] px-3 py-2.5 transition focus-within:border-[#F97316] focus-within:ring-2 focus-within:ring-[#F97316]/20 sm:w-64">
+            <Search className="h-4 w-4 text-[#94A3B8]" aria-hidden="true" />
+            <input
+              type="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              className="w-full bg-transparent text-sm text-[#F8FAFC] outline-none placeholder:text-[#64748B]"
+              placeholder="Search complaints"
+            />
+          </div>
           <select
             value={statusFilter}
             onChange={(event) => setStatusFilter(event.target.value)}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+            className="rounded-2xl border border-white/[0.08] bg-[#0F172A] px-3 py-2.5 text-sm text-[#F8FAFC] outline-none transition focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20"
           >
             {statusFilters.map((filter) => (
               <option key={filter.value} value={filter.value}>
@@ -123,6 +130,7 @@ function MyComplaints() {
               </option>
             ))}
           </select>
+        </div>
         </div>
       </div>
 

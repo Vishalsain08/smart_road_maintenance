@@ -20,10 +20,15 @@ function ComplaintMarker({ complaint }) {
           <p className="text-sm text-slate-600">
             {formatComplaintCategory(complaint.category)}
           </p>
+          {complaint.location?.address && (
+            <p className="text-sm text-slate-600">
+              {complaint.location.address}
+            </p>
+          )}
           <StatusBadge status={complaint.status} />
           <Link
             to={`/citizen/complaints/${complaint._id}`}
-            className="block text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+            className="block text-sm font-semibold text-[#F97316] hover:text-orange-600"
           >
             View details
           </Link>

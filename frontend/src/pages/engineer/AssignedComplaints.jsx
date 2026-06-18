@@ -1,18 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
+import { Cone } from "lucide-react";
 import toast from "react-hot-toast";
-import EmptyState from "../../components/citizen/EmptyState.jsx";
-import LoadingSpinner from "../../components/citizen/LoadingSpinner.jsx";
 import AssignedComplaintCard from "../../components/engineer/AssignedComplaintCard.jsx";
 import api from "../../services/api.js";
-import {
-  COMPLAINT_STATUSES,
-  normalizeComplaintStatus,
-} from "../../utils/complaintConstants.js";
+import { normalizeComplaintStatus } from "../../utils/complaintConstants.js";
+
+function SkeletonBlock({ className = "" }) {
+  return <div className={`animate-pulse rounded-2xl bg-white/10 ${className}`} />;
+}
 
 function AssignedComplaints() {
   const [complaints, setComplaints] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -32,75 +30,51 @@ function AssignedComplaints() {
     fetchComplaints();
   }, []);
 
-  const filteredComplaints = useMemo(() => {
-    const searchValue = searchTerm.trim().toLowerCase();
-
-    return complaints.filter((complaint) => {
-      const matchesSearch =
-        !searchValue ||
-        complaint.title?.toLowerCase().includes(searchValue) ||
-        complaint.category?.toLowerCase().includes(searchValue) ||
-        complaint.description?.toLowerCase().includes(searchValue);
-      const matchesStatus =
-        statusFilter === "all" ||
-        normalizeComplaintStatus(complaint.status) === statusFilter;
-
-      return matchesSearch && matchesStatus;
-    });
-  }, [complaints, searchTerm, statusFilter]);
-
-  if (isLoading) {
-    return <LoadingSpinner label="Loading assigned complaints..." />;
-  }
+  const activeComplaints = useMemo(
+    () =>
+      complaints.filter(
+        (complaint) => normalizeComplaintStatus(complaint.status) !== "resolved",
+      ),
+    [complaints],
+  );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
+    <main className="min-h-screen bg-[#0F172A] text-[#F8FAFC]">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-950">
-            Assigned Complaints
+          <p className="text-sm font-semibold text-[#F97316]">Assigned work</p>
+          <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
+            Pending Complaints
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Work items assigned to your engineer account.
+          <p className="mt-2 text-sm text-[#94A3B8]">
+            All pending and in-progress complaints assigned to your account.
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input
-            type="search"
-            value={searchTerm}
-            onChange={(event) => setSearchTerm(event.target.value)}
-            className="w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100 sm:w-72"
-            placeholder="Search complaints"
-          />
-          <select
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value)}
-            className="rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
-          >
-            <option value="all">All Statuses</option>
-            {COMPLAINT_STATUSES.map((status) => (
-              <option key={status.value} value={status.value}>
-                {status.label}
-              </option>
+        {isLoading ? (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonBlock key={index} className="h-[390px]" />
             ))}
-          </select>
-        </div>
+          </div>
+        ) : activeComplaints.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {activeComplaints.map((complaint) => (
+              <AssignedComplaintCard key={complaint._id} complaint={complaint} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-dashed border-white/[0.12] bg-[#1E293B] p-8 text-center shadow-lg shadow-slate-950/10">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F97316]/10 text-[#F97316]">
+              <Cone className="h-6 w-6" aria-hidden="true" />
+            </span>
+            <p className="mt-4 text-sm font-semibold text-[#F8FAFC]">
+              No complaints assigned yet
+            </p>
+          </div>
+        )}
       </div>
-
-      {filteredComplaints.length > 0 ? (
-        <div className="grid gap-5 xl:grid-cols-2">
-          {filteredComplaints.map((complaint) => (
-            <AssignedComplaintCard key={complaint._id} complaint={complaint} />
-          ))}
-        </div>
-      ) : (
-        <EmptyState
-          title="No assigned complaints found"
-          message="Try changing the search or status filter, or check back after an admin assigns work to you."
-        />
-      )}
-    </div>
+    </main>
   );
 }
 

@@ -12,11 +12,6 @@ import notFoundMiddleware from "./middleware/notFoundMiddleware.js";
 // Loads environment variables from .env.
 dotenv.config();
 
-// Connect to MongoDB only when a connection string is available.
-if (process.env.MONGO_URI) {
-  connectDB();
-}
-
 const app = express();
 
 // Global middleware.
@@ -40,11 +35,22 @@ app.use(errorMiddleware);
 
 const PORT = process.env.PORT || 5000;
 
-// Starts the Express server.
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log("Admin engineer routes mounted:");
-  console.log("GET    /api/admin/engineers");
-  console.log("POST   /api/admin/engineers");
-  console.log("DELETE /api/admin/engineers/:id");
-});
+const startServer = async () => {
+  if (!process.env.MONGO_URI) {
+    console.error("MONGO_URI is missing. Add it to server/.env before logging in.");
+    process.exit(1);
+  }
+
+  await connectDB();
+
+  // Starts the Express server only after MongoDB is ready.
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    console.log("Admin engineer routes mounted:");
+    console.log("GET    /api/admin/engineers");
+    console.log("POST   /api/admin/engineers");
+    console.log("DELETE /api/admin/engineers/:id");
+  });
+};
+
+startServer();
