@@ -96,12 +96,6 @@ function MapOverview() {
                           {formatComplaintCategory(complaint.category)}
                         </p>
                       </div>
-                      <p className="text-sm text-[#CBD5E1]">
-                        Engineer:{" "}
-                        <span className="font-semibold text-[#F8FAFC]">
-                          {complaint.assignedEngineer?.name || "Unassigned"}
-                        </span>
-                      </p>
                       <div className="flex items-center justify-between gap-3">
                         <StatusBadge status={complaint.status} />
                         <button

@@ -4,7 +4,6 @@ import { useAuth } from "../context/AuthContext.jsx";
 const roleHome = {
   admin: "/admin",
   citizen: "/citizen",
-  engineer: "/engineer",
 };
 
 function ProtectedRoute({ allowedRoles = [] }) {

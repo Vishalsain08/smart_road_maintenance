@@ -5,7 +5,6 @@ import connectDB from "./config/db.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
-import engineerRoutes from "./routes/engineerRoutes.js";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 import notFoundMiddleware from "./middleware/notFoundMiddleware.js";
 
@@ -27,7 +26,6 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/engineer", engineerRoutes);
 
 // Error handlers.
 app.use(notFoundMiddleware);
@@ -46,10 +44,6 @@ const startServer = async () => {
   // Starts the Express server only after MongoDB is ready.
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-    console.log("Admin engineer routes mounted:");
-    console.log("GET    /api/admin/engineers");
-    console.log("POST   /api/admin/engineers");
-    console.log("DELETE /api/admin/engineers/:id");
   });
 };
 

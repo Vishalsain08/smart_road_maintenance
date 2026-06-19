@@ -99,9 +99,10 @@ export const getMyComplaints = async (req, res, next) => {
 // Returns one complaint by ID with role-based access control.
 export const getComplaintById = async (req, res, next) => {
   try {
-    const complaint = await Complaint.findById(req.params.id)
-      .populate("reportedBy", "name email")
-      .populate("assignedEngineer", "name email");
+    const complaint = await Complaint.findById(req.params.id).populate(
+      "reportedBy",
+      "name email"
+    );
 
     if (!complaint) {
       return res.status(404).json({
@@ -115,16 +116,6 @@ export const getComplaintById = async (req, res, next) => {
     if (
       userRole === "citizen" &&
       complaint.reportedBy._id.toString() !== req.user._id.toString()
-    ) {
-      return res.status(403).json({
-        message: "Access denied",
-      });
-    }
-
-    // Engineers can only view assigned complaints.
-    if (
-      userRole === "engineer" &&
-      complaint.assignedEngineer?._id.toString() !== req.user._id.toString()
     ) {
       return res.status(403).json({
         message: "Access denied",

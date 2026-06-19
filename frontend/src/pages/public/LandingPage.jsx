@@ -5,7 +5,6 @@ import {
   FileText,
   MapPinned,
   ShieldCheck,
-  UserCheck,
   Wrench,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -18,10 +17,10 @@ const features = [
       "Citizens can submit structured complaints with issue details and location context for faster review.",
   },
   {
-    icon: UserCheck,
-    title: "Engineer Assignment",
+    icon: ShieldCheck,
+    title: "Admin Review",
     description:
-      "Admins can route approved complaints to responsible field engineers for coordinated action.",
+      "Admins can review complaint details, inspect locations, and update each report directly.",
   },
   {
     icon: ClipboardCheck,
@@ -43,14 +42,9 @@ const steps = [
     description: "The admin verifies the complaint and prepares it for action.",
   },
   {
-    icon: UserCheck,
-    title: "Engineer Gets Assigned",
-    description: "A field engineer receives responsibility for the repair work.",
-  },
-  {
     icon: Wrench,
     title: "Road Issue Resolved",
-    description: "The issue is closed after the repair workflow is completed.",
+    description: "The admin marks the complaint resolved after the repair workflow is completed.",
   },
 ];
 
@@ -70,8 +64,8 @@ function DashboardIllustration() {
       <div className="mt-4 grid gap-4 lg:grid-cols-[1fr_0.8fr]">
         <div className="space-y-3">
           {[
-            ["Pothole on Ring Road", "Under Review", "#F97316"],
-            ["Damaged divider lane", "Assigned", "#38BDF8"],
+            ["Pothole on Ring Road", "Pending", "#F97316"],
+            ["Damaged divider lane", "Pending", "#38BDF8"],
             ["Broken shoulder edge", "Resolved", "#22C55E"],
           ].map(([title, status, color]) => (
             <div
@@ -110,14 +104,14 @@ function DashboardIllustration() {
           </div>
 
           <div className="rounded-2xl border border-white/[0.08] bg-[#0F172A] p-4">
-            <p className="text-sm font-semibold text-[#F8FAFC]">Engineer Assignment</p>
+            <p className="text-sm font-semibold text-[#F8FAFC]">Admin Review</p>
             <div className="mt-3 flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#F97316]/15 text-sm font-bold text-[#F97316]">
-                RK
+                AD
               </span>
               <div>
-                <p className="text-sm font-semibold text-[#F8FAFC]">Rahul Kumar</p>
-                <p className="text-xs text-[#94A3B8]">Road maintenance engineer</p>
+                <p className="text-sm font-semibold text-[#F8FAFC]">Admin Desk</p>
+                <p className="text-xs text-[#94A3B8]">Complaint status control</p>
               </div>
             </div>
           </div>
@@ -141,7 +135,7 @@ function LandingPage() {
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#CBD5E1]">
               Report and resolve road maintenance issues through a centralized
-              platform built for citizens, administrators, and field engineers.
+              platform built for citizens and administrators.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link
@@ -214,7 +208,7 @@ function LandingPage() {
             </h2>
           </div>
 
-          <div className="mt-10 grid gap-5 md:grid-cols-4">
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
             {steps.map((step, index) => {
               const Icon = step.icon;
               return (

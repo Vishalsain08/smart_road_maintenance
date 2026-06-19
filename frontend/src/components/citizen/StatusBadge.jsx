@@ -2,13 +2,11 @@ import { normalizeComplaintStatus } from "../../utils/complaintConstants.js";
 
 const statusStyles = {
   pending: "bg-amber-400/10 text-amber-300 ring-amber-300/20",
-  "in-progress": "bg-[#38BDF8]/10 text-[#38BDF8] ring-[#38BDF8]/20",
   resolved: "bg-emerald-400/10 text-emerald-300 ring-emerald-300/20",
 };
 
 const statusLabels = {
   pending: "Pending",
-  "in-progress": "In Progress",
   resolved: "Resolved",
 };
 

@@ -7,7 +7,6 @@ export const COMPLAINT_CATEGORIES = [
 
 export const COMPLAINT_STATUSES = [
   { label: "Pending", value: "pending" },
-  { label: "In Progress", value: "in-progress" },
   { label: "Resolved", value: "resolved" },
 ];
 

@@ -3,14 +3,12 @@ import { normalizeComplaintStatus } from "../../utils/complaintConstants.js";
 
 const timelineSteps = [
   { key: "created", label: "Complaint Created" },
-  { key: "in-progress", label: "Engineer Assigned & Work Started" },
   { key: "resolved", label: "Resolved" },
 ];
 
 const statusOrder = {
   pending: 0,
-  "in-progress": 1,
-  resolved: 2,
+  resolved: 1,
 };
 
 function ComplaintTimeline({ status = "pending" }) {
@@ -21,7 +19,7 @@ function ComplaintTimeline({ status = "pending" }) {
       <h2 className="text-lg font-semibold text-[#F8FAFC]">
         Complaint Timeline
       </h2>
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {timelineSteps.map((step, index) => {
           const isActive = index <= activeIndex;
 

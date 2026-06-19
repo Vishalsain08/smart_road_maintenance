@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, UserRound } from "lucide-react";
+import { CalendarDays, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatComplaintCategory } from "../../utils/complaintConstants.js";
 import StatusBadge from "./StatusBadge.jsx";
@@ -61,14 +61,6 @@ function ComplaintCard({ complaint }) {
           <div className="flex items-center gap-2">
             <CalendarDays className="h-4 w-4 shrink-0 text-[#38BDF8]" />
             <span>{formatDate(complaint.createdAt)}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <UserRound className="h-4 w-4 shrink-0 text-[#38BDF8]" />
-            <span>
-              {complaint.assignedEngineer?.name
-                ? `Assigned to ${complaint.assignedEngineer.name}`
-                : "Engineer not assigned"}
-            </span>
           </div>
         </div>
       </div>

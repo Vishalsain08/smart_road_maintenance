@@ -32,11 +32,7 @@ const complaintSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: [
-        "pending",
-        "in-progress",
-        "resolved",
-      ],
+      enum: ["pending", "resolved"],
       default: "pending",
       index: true,
     },
@@ -45,13 +41,6 @@ const complaintSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
-    },
-
-    assignedEngineer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
       index: true,
     },
 

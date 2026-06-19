@@ -102,7 +102,7 @@ function LocationPicker({ value, onChange }) {
         ...nextLocation,
         address: data.display_name || "",
       });
-    } catch (error) {
+    } catch {
       if (reverseGeocodeRequestId.current === requestId) {
         toast.error("Location selected, but address detection failed.");
         onChange(nextLocation);

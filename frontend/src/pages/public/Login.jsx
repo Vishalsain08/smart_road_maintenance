@@ -7,7 +7,6 @@ import { useAuth } from "../../context/AuthContext.jsx";
 const roleRedirects = {
   admin: "/admin",
   citizen: "/citizen",
-  engineer: "/engineer",
 };
 
 function Login() {
@@ -62,7 +61,7 @@ function Login() {
           Sign in to manage civic road maintenance.
         </h1>
         <p className="mt-4 max-w-xl leading-7 text-[#CBD5E1]">
-          Access your Road Fix account to submit complaints, review assignments,
+          Access your Road Fix account to submit complaints, review reports,
           and keep road repair workflows moving.
         </p>
         <div className="mt-10 rounded-2xl border border-white/[0.08] bg-[#0F172A] p-5">
@@ -73,7 +72,7 @@ function Login() {
             <div>
               <p className="font-semibold text-[#F8FAFC]">Secure role access</p>
               <p className="mt-1 text-sm text-[#94A3B8]">
-                Citizens, admins, and engineers continue through their existing dashboards.
+                Citizens and admins continue through their existing dashboards.
               </p>
             </div>
           </div>

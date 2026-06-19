@@ -6,7 +6,6 @@ import { useAuth } from "../../context/AuthContext.jsx";
 const dashboardPaths = {
   admin: "/admin",
   citizen: "/citizen",
-  engineer: "/engineer",
 };
 
 function Navbar() {

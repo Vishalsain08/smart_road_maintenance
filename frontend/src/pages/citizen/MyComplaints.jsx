@@ -1,19 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { List, Map, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { List, Map } from "lucide-react";
 import toast from "react-hot-toast";
 import ComplaintCard from "../../components/citizen/ComplaintCard.jsx";
 import ComplaintMap from "../../components/citizen/ComplaintMap.jsx";
 import EmptyState from "../../components/citizen/EmptyState.jsx";
 import api from "../../services/api.js";
-import {
-  COMPLAINT_STATUSES,
-  normalizeComplaintStatus,
-} from "../../utils/complaintConstants.js";
-
-const statusFilters = [
-  { label: "All", value: "all" },
-  ...COMPLAINT_STATUSES,
-];
 
 function SkeletonCard() {
   return (
@@ -30,8 +21,6 @@ function SkeletonCard() {
 
 function MyComplaints() {
   const [complaints, setComplaints] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("list");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -52,85 +41,47 @@ function MyComplaints() {
     fetchComplaints();
   }, []);
 
-  const filteredComplaints = useMemo(
-    () =>
-      complaints.filter((complaint) => {
-        const matchesStatus =
-          statusFilter === "all" ||
-          normalizeComplaintStatus(complaint.status) === statusFilter;
-        const searchValue = searchTerm.trim().toLowerCase();
-        const matchesSearch =
-          !searchValue ||
-          complaint.title?.toLowerCase().includes(searchValue) ||
-          complaint.category?.toLowerCase().includes(searchValue);
-
-        return matchesStatus && matchesSearch;
-      }),
-    [complaints, searchTerm, statusFilter],
-  );
-
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       <div className="rounded-2xl border border-white/[0.08] bg-[#1E293B] p-6 shadow-sm">
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#F8FAFC]">
-            My Complaints
-          </h1>
-          <p className="mt-2 text-sm text-[#94A3B8]">
-            Review every issue you have reported and follow its current status.
-          </p>
-        </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-[#F8FAFC]">
+              My Complaints
+            </h1>
+            <p className="mt-2 text-sm text-[#94A3B8]">
+              Review every issue you have reported and follow its current status.
+            </p>
+          </div>
 
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <div className="inline-flex rounded-2xl border border-white/[0.08] bg-[#0F172A] p-1">
-            <button
-              type="button"
-              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
-                viewMode === "list"
-                  ? "bg-[#F97316] text-white"
-                  : "text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#F8FAFC]"
-              }`}
-              onClick={() => setViewMode("list")}
-            >
-              <List className="h-4 w-4" aria-hidden="true" />
-              List View
-            </button>
-            <button
-              type="button"
-              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
-                viewMode === "map"
-                  ? "bg-[#F97316] text-white"
-                  : "text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#F8FAFC]"
-              }`}
-              onClick={() => setViewMode("map")}
-            >
-              <Map className="h-4 w-4" aria-hidden="true" />
-              Map View
-            </button>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="inline-flex rounded-2xl border border-white/[0.08] bg-[#0F172A] p-1">
+              <button
+                type="button"
+                className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
+                  viewMode === "list"
+                    ? "bg-[#F97316] text-white"
+                    : "text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#F8FAFC]"
+                }`}
+                onClick={() => setViewMode("list")}
+              >
+                <List className="h-4 w-4" aria-hidden="true" />
+                List View
+              </button>
+              <button
+                type="button"
+                className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
+                  viewMode === "map"
+                    ? "bg-[#F97316] text-white"
+                    : "text-[#94A3B8] hover:bg-white/[0.05] hover:text-[#F8FAFC]"
+                }`}
+                onClick={() => setViewMode("map")}
+              >
+                <Map className="h-4 w-4" aria-hidden="true" />
+                Map View
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-2 rounded-2xl border border-white/[0.08] bg-[#0F172A] px-3 py-2.5 transition focus-within:border-[#F97316] focus-within:ring-2 focus-within:ring-[#F97316]/20 sm:w-64">
-            <Search className="h-4 w-4 text-[#94A3B8]" aria-hidden="true" />
-            <input
-              type="search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              className="w-full bg-transparent text-sm text-[#F8FAFC] outline-none placeholder:text-[#64748B]"
-              placeholder="Search complaints"
-            />
-          </div>
-          <select
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value)}
-            className="rounded-2xl border border-white/[0.08] bg-[#0F172A] px-3 py-2.5 text-sm text-[#F8FAFC] outline-none transition focus:border-[#F97316] focus:ring-2 focus:ring-[#F97316]/20"
-          >
-            {statusFilters.map((filter) => (
-              <option key={filter.value} value={filter.value}>
-                {filter.label}
-              </option>
-            ))}
-          </select>
-        </div>
         </div>
       </div>
 
@@ -140,18 +91,18 @@ function MyComplaints() {
             <SkeletonCard key={index} />
           ))}
         </div>
-      ) : filteredComplaints.length > 0 && viewMode === "map" ? (
-        <ComplaintMap complaints={filteredComplaints} />
-      ) : filteredComplaints.length > 0 ? (
+      ) : complaints.length > 0 && viewMode === "map" ? (
+        <ComplaintMap complaints={complaints} />
+      ) : complaints.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {filteredComplaints.map((complaint) => (
+          {complaints.map((complaint) => (
             <ComplaintCard key={complaint._id} complaint={complaint} />
           ))}
         </div>
       ) : (
         <EmptyState
-          title="No complaints found"
-          message="Try changing the search or status filter, or submit a new road maintenance issue."
+          title="No complaints reported yet"
+          message="Submit a new road maintenance issue to start tracking it here."
           actionLabel="Report New Issue"
           actionTo="/citizen/create"
         />

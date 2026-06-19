@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
-// Defines users for citizens, admins, and engineers.
+// Defines users for citizens and admins.
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["citizen", "admin", "engineer"],
+      enum: ["citizen", "admin"],
       default: "citizen",
     },
   },

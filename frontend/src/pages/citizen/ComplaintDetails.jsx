@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  CalendarDays,
-  FileText,
-  Image as ImageIcon,
-  MapPin,
-  UserRound,
-} from "lucide-react";
+import { ArrowLeft, CalendarDays, FileText, MapPin } from "lucide-react";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
 import ComplaintTimeline from "../../components/citizen/ComplaintTimeline.jsx";
@@ -139,11 +132,6 @@ function ComplaintDetails() {
               value={formatDate(complaint.createdAt)}
             />
             <InfoItem
-              icon={CalendarDays}
-              label="Updated Date"
-              value={formatDate(complaint.updatedAt)}
-            />
-            <InfoItem
               icon={MapPin}
               label="Location"
               value={complaint.location?.address || "Address not available"}
@@ -157,11 +145,6 @@ function ComplaintDetails() {
                   ? `${complaint.location.lat.toFixed(6)}, ${complaint.location.lng.toFixed(6)}`
                   : "Coordinates not available"
               }
-            />
-            <InfoItem
-              icon={UserRound}
-              label="Engineer Assigned"
-              value={complaint.assignedEngineer?.name || "Not assigned yet"}
             />
           </div>
         </aside>
@@ -179,35 +162,6 @@ function ComplaintDetails() {
           </p>
         </div>
         <ReadOnlyMap complaint={complaint} />
-      </section>
-
-      <section className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-2xl border border-white/[0.08] bg-[#1E293B] p-5 shadow-sm">
-          <h2 className="flex items-center gap-2 text-lg font-semibold text-[#F8FAFC]">
-            <ImageIcon className="h-5 w-5 text-[#F97316]" aria-hidden="true" />
-            Resolution Image
-          </h2>
-          {complaint.resolutionImage ? (
-            <img
-              src={complaint.resolutionImage}
-              alt="Resolution"
-              className="mt-4 h-64 w-full rounded-2xl border border-white/[0.08] object-cover"
-            />
-          ) : (
-            <p className="mt-3 text-sm text-[#94A3B8]">
-              Resolution image is not available yet.
-            </p>
-          )}
-        </div>
-
-        <div className="rounded-2xl border border-white/[0.08] bg-[#1E293B] p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-[#F8FAFC]">
-            Resolution Notes
-          </h2>
-          <p className="mt-3 leading-7 text-[#CBD5E1]">
-            {complaint.resolutionNotes || "Resolution notes are not available yet."}
-          </p>
-        </div>
       </section>
     </div>
   );

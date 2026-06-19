@@ -1,4 +1,4 @@
-import { CalendarDays, ImageIcon, MapPin, UserRound, Wrench, X } from "lucide-react";
+import { CalendarDays, ImageIcon, MapPin, UserRound, X } from "lucide-react";
 import ReadOnlyMap from "../citizen/ReadOnlyMap.jsx";
 import StatusBadge from "../citizen/StatusBadge.jsx";
 import {
@@ -118,12 +118,6 @@ function AdminComplaintDetails({ complaint, onClose }) {
                   icon={UserRound}
                 />
                 <DetailItem
-                  label="Assigned Engineer"
-                  value={complaint.assignedEngineer?.name || "Not assigned"}
-                  helper={complaint.assignedEngineer?.email || "Awaiting assignment"}
-                  icon={Wrench}
-                />
-                <DetailItem
                   label="Created"
                   value={formatDateTime(complaint.createdAt)}
                   icon={CalendarDays}
@@ -134,24 +128,6 @@ function AdminComplaintDetails({ complaint, onClose }) {
                   icon={CalendarDays}
                 />
               </dl>
-            </section>
-
-            <section className="rounded-2xl border border-white/[0.08] bg-[#0F172A] p-5">
-              <h3 className="font-semibold text-[#F8FAFC]">Resolution</h3>
-              {complaint.resolutionImage ? (
-                <img
-                  src={complaint.resolutionImage}
-                  alt="Resolution"
-                  className="mt-4 h-52 w-full rounded-2xl object-cover"
-                />
-              ) : (
-                <div className="mt-4 flex h-40 items-center justify-center rounded-2xl border border-dashed border-white/[0.12] text-sm text-[#94A3B8]">
-                  No resolution image uploaded yet.
-                </div>
-              )}
-              <p className="mt-4 text-sm leading-6 text-[#CBD5E1]">
-                {complaint.resolutionNotes || "No resolution notes available."}
-              </p>
             </section>
           </div>
         </div>

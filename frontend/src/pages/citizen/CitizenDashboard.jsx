@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CalendarDays, FilePlus2, RefreshCw, Road } from "lucide-react";
+import { CalendarDays, FilePlus2, Road } from "lucide-react";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import ComplaintCard from "../../components/citizen/ComplaintCard.jsx";
@@ -43,7 +43,6 @@ function CitizenDashboard() {
   const { user } = useAuth();
   const [complaints, setComplaints] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     const fetchInitialComplaints = async () => {
@@ -61,22 +60,6 @@ function CitizenDashboard() {
 
     fetchInitialComplaints();
   }, []);
-
-  const refreshComplaints = async () => {
-    setIsRefreshing(true);
-
-    try {
-      const { data } = await api.get("/complaints/my");
-      setComplaints(data.complaints || []);
-      toast.success("Complaints refreshed");
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Unable to refresh complaints.",
-      );
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
 
   const summary = useMemo(
     () => ({
@@ -148,7 +131,7 @@ function CitizenDashboard() {
               Quick Actions
             </h2>
             <p className="mt-1 text-sm text-[#94A3B8]">
-              Submit a new complaint or refresh the latest updates.
+              Submit a new road issue and track its status from your dashboard.
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -159,18 +142,6 @@ function CitizenDashboard() {
               <FilePlus2 className="h-4 w-4" aria-hidden="true" />
               Report an Issue
             </Link>
-            <button
-              type="button"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-[#0F172A] px-5 py-3 text-sm font-semibold text-[#F8FAFC] transition-colors duration-200 hover:border-[#F97316]/35 hover:bg-[#162033] disabled:cursor-not-allowed disabled:opacity-70"
-              onClick={refreshComplaints}
-              disabled={isRefreshing}
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${isRefreshing ? "animate-spin" : ""}`}
-                aria-hidden="true"
-              />
-              {isRefreshing ? "Refreshing..." : "Refresh Complaints"}
-            </button>
           </div>
         </section>
 
@@ -181,8 +152,7 @@ function CitizenDashboard() {
                 My Complaints
               </h2>
               <p className="mt-1 text-sm text-[#94A3B8]">
-                Open any complaint to view full details, location, assignment,
-                and resolution updates.
+                Open any complaint to view its details, location, and current status.
               </p>
             </div>
             <Link
